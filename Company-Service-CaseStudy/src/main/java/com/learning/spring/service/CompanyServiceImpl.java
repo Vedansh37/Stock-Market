@@ -7,6 +7,8 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.modelmapper.convention.MatchingStrategies;
+import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,34 +16,49 @@ import com.learning.spring.dto.CompanyDto;
 import com.learning.spring.dto.IpoDetailsDto;
 import com.learning.spring.model.Company;
 import com.learning.spring.model.IpoDetail;
+import com.learning.spring.model.StockExchange;
 import com.learning.spring.repo.CompanyRepository;
+import com.learning.spring.repo.StockExchangeRepository;
 
 @Service
 public class CompanyServiceImpl implements CompanyService {
 
 	CompanyRepository companyRepository;
 
-	public CompanyServiceImpl(CompanyRepository companyRepository) {
+	StockExchangeRepository stockExchangeRepository;
+	
+	@Autowired
+	Logger logger;
+	
+	@Autowired
+	ModelMapper mapper;
+	
+	public CompanyServiceImpl(CompanyRepository companyRepository,StockExchangeRepository stockExchangeRepository) {
 		this.companyRepository = companyRepository;
+		this.stockExchangeRepository= stockExchangeRepository;
 	}
 
 	@Override
 	@Transactional
 	public Optional<CompanyDto> findCompanyById(Long id) {
 		Optional<Company> company = companyRepository.findById(id);
-		ModelMapper mapper = new ModelMapper();
-		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-		Type optionalType = new TypeToken<Optional<CompanyDto>>() {
-		}.getType();
-
-		return mapper.map(company, optionalType);
+		Type optionalType = new TypeToken<Optional<CompanyDto>>() {}.getType();
+		Optional<CompanyDto> companyDto = mapper.map(company, optionalType);
+		return companyDto;
 	}
 
 	@Override
 	@Transactional
 	public CompanyDto addCompany(Company company) {
-		ModelMapper mapper = new ModelMapper();
-		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+		
+		List<StockExchange> stockExchanges = company.getStockExchanges();
+		
+		for(StockExchange stockExchange : stockExchanges) {
+			
+			if(stockExchangeRepository.findByExhangeName(stockExchange.getExhangeName())!=null)
+			stockExchangeRepository.save(stockExchange);
+		}
+		
 		companyRepository.save(company);
 		return mapper.map(company, CompanyDto.class);
 	}
@@ -58,8 +75,6 @@ public class CompanyServiceImpl implements CompanyService {
 	@Transactional
 	public List<CompanyDto> findAllCompany() {
 		List<Company> companies = companyRepository.findAll();
-		ModelMapper mapper = new ModelMapper();
-		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 		Type listType = new TypeToken<List<CompanyDto>>() {
 		}.getType();
 
@@ -71,8 +86,6 @@ public class CompanyServiceImpl implements CompanyService {
 	public Optional<CompanyDto> getCompanyDetails(String companyName) {
 		Optional<Company> company = companyRepository.findCompanyByCompanyName(companyName);
 		Type optionalType = new TypeToken<Optional<CompanyDto>>() {}.getType();
-		ModelMapper mapper = new ModelMapper();
-		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 		return mapper.map(company, optionalType);
 	}
 
@@ -83,11 +96,19 @@ public class CompanyServiceImpl implements CompanyService {
 		Optional<Company> company = companyRepository.findById(id);
 		List<IpoDetail> ipoDetails = company.get().getIpoDetails();
 		Type optionalListType = new TypeToken<List<Optional<IpoDetailsDto>>>() {}.getType();
-		ModelMapper mapper = new ModelMapper();
-		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-		return mapper.map(ipoDetails, optionalListType);
+		return mapper.map(ipoDetails, optionalListType);	
+	}
+	
+	@Override
+	@Transactional
+	public List<CompanyDto> findCompanyForStockExchangeById(Long id){
 		
-		
+		List<Company> companies = companyRepository.findCompanyForStockExchangeById(id);
+		Type listType = new TypeToken<List<CompanyDto>>() {}.getType();
+		List<CompanyDto> companiesDto=mapper.map(companies, listType);
+//		Logging to check the output
+		logger.info(companiesDto.toString());
+		return companiesDto;
 	}
 
 }

@@ -3,7 +3,7 @@ package com.learning.spring.dto;
 import java.util.List;
 
 //import com.learning.spring.model.IpoDetail;
-import com.learning.spring.model.Sector;
+//import com.learning.spring.model.Sector;
 import com.learning.spring.model.StockExchange;
 
 import lombok.AllArgsConstructor;
@@ -21,7 +21,7 @@ public class CompanyDto {
 
 	private String ceo;
 
-	private Sector sector;
+//	private Sector sector;
 	
 	private List<String> boardOfDirectors;
 	

@@ -24,4 +24,6 @@ public interface CompanyService {
 	public Optional<CompanyDto> getCompanyDetails(String companyName);
 	
 	public List<Optional<IpoDetailsDto>> getCompanyIpoDetails(Long id);
+
+	List<CompanyDto> findCompanyForStockExchangeById(Long id);
 }

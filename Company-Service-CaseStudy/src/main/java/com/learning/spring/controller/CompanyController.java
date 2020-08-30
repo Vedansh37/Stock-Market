@@ -31,8 +31,11 @@ public class CompanyController {
 	
 	@GetMapping("companies/id/{id}")
 	public ResponseEntity<Optional<CompanyDto>> findCompanyById(@PathVariable("id") Long id){
-		
-		return new ResponseEntity<Optional<CompanyDto>>(companyService.findCompanyById(id),HttpStatus.FOUND);
+		Optional<CompanyDto> companyDto = companyService.findCompanyById(id);
+		System.out.println(companyDto.get());
+//		return companyDto;
+		return ResponseEntity.status(HttpStatus.FOUND).body(companyDto);
+//		return new ResponseEntity<Optional<CompanyDto>>(companyService.findCompanyById(id),HttpStatus.FOUND);
 	}
 	
 	@PostMapping("/companies/add")
@@ -55,5 +58,10 @@ public class CompanyController {
 	@GetMapping("/companies/ipoDetails/{id}")
 	public ResponseEntity<List<Optional<IpoDetailsDto>>> getCompanyIpoDetails(@PathVariable("id") Long companyId){
 		return ResponseEntity.status(HttpStatus.FOUND).body(companyService.getCompanyIpoDetails(companyId));
+	}
+	
+	@GetMapping("/companies/stockexchange/{id}")
+	public ResponseEntity<List<CompanyDto>> findCompanyForStockExchangeById(@PathVariable("id") Long id){
+		return ResponseEntity.status(HttpStatus.FOUND).body(companyService.findCompanyForStockExchangeById(id));
 	}
 }
