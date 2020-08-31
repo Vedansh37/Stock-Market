@@ -18,8 +18,14 @@ public class Sector {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long sectorId;
-	
+
 	private String sectorName;
 	
 	private String brief;
+	
+	public Sector(String sectorName, String brief) {
+		super();
+		this.sectorName = sectorName;
+		this.brief = brief;
+	}
 }

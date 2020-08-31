@@ -40,24 +40,25 @@ public class CompanyServiceImpl implements CompanyService {
 
 	@Override
 	@Transactional
-	public Optional<CompanyDto> findCompanyById(Long id) {
-		Optional<Company> company = companyRepository.findById(id);
-		Type optionalType = new TypeToken<Optional<CompanyDto>>() {}.getType();
-		Optional<CompanyDto> companyDto = mapper.map(company, optionalType);
-		return companyDto;
+	public CompanyDto findCompanyById(Long id) {
+		Optional<Company> optionalCompany = companyRepository.findById(id);
+		Company companyFromOptional = mapper.map(optionalCompany.get(), Company.class);
+		logger.info(companyFromOptional.toString());
+		Company company = companyRepository.findCompanyById(id);
+		return mapper.map(company,CompanyDto.class);
 	}
 
 	@Override
 	@Transactional
 	public CompanyDto addCompany(Company company) {
-		
-		List<StockExchange> stockExchanges = company.getStockExchanges();
-		
-		for(StockExchange stockExchange : stockExchanges) {
-			
-			if(stockExchangeRepository.findByExhangeName(stockExchange.getExhangeName())!=null)
-			stockExchangeRepository.save(stockExchange);
-		}
+//		
+//		List<StockExchange> stockExchanges = company.getStockExchanges();
+//		
+//		for(StockExchange stockExchange : stockExchanges) {
+//			
+//			if(stockExchangeRepository.findByExhangeName(stockExchange.getExhangeName())!=null)
+//			stockExchangeRepository.save(stockExchange);
+//		}
 		
 		companyRepository.save(company);
 		return mapper.map(company, CompanyDto.class);

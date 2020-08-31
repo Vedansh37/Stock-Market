@@ -32,7 +32,7 @@ public class IpoDetail {
 	
 //	@Column(name = "Company_Name")
 //	@ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-	private String companyName;
+	private Long companyName;
 //	
 	
 //	@Column(name="StockExchange")

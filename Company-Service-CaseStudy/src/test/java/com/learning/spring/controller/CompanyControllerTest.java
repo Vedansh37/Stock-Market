@@ -30,6 +30,7 @@ import com.learning.spring.CompanyServiceCaseStudyApplication;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class CompanyControllerTest {
 
+	@Autowired
 	private MockMvc mockMvc;
 
 	@Autowired

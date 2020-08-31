@@ -10,7 +10,7 @@ import com.learning.spring.model.Company;
 public interface CompanyService {
 
 	
-	public Optional<CompanyDto> findCompanyById(Long id);
+	public CompanyDto findCompanyById(Long id);
 	
 	public CompanyDto addCompany(Company company);
 	

@@ -27,6 +27,9 @@ import lombok.NoArgsConstructor;
 				  query = "SELECT * FROM COMPANY WHERE COMPANY_ID IN "
 				  		+ "(SELECT COMPANY_COMPANY_ID FROM COMPANY_STOCK_EXCHANGES WHERE STOCK_EXCHANGES_STOCK_EXCHANGE_ID= ?)",
 				  resultClass = Company.class)
+
+@NamedNativeQuery(name="Company.findCompanyById",
+				query = "SELECT * FROM COMPANY WHERE COMPANY_ID = ?",resultClass = Company.class)
 public class Company {
 
 	@Id
@@ -49,7 +52,7 @@ public class Company {
 	private String[] boardOfDirectors = new String[2];
 	
 	
-	@ManyToMany(fetch = FetchType.LAZY,cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.REFRESH,CascadeType.REMOVE})
+	@ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
 	@JoinColumn(name = "companyId")
 	private List<StockExchange> stockExchanges;
 	
@@ -63,6 +66,19 @@ public class Company {
 	public String toString() {
 		return "Company [companyId=" + companyId + ", companyName=" + companyName + ", turnover=" + turnover + ", ceo="
 				+ ceo + "]";
+	}
+
+
+	public Company(String companyName, int turnover, String ceo, Sector sector, String[] boardOfDirectors,
+			List<StockExchange> stockExchanges, List<IpoDetail> ipoDetails) {
+		super();
+		this.companyName = companyName;
+		this.turnover = turnover;
+		this.ceo = ceo;
+		this.sector = sector;
+		this.boardOfDirectors = boardOfDirectors;
+		this.stockExchanges = stockExchanges;
+		this.ipoDetails = ipoDetails;
 	}
 	
 	

@@ -30,8 +30,8 @@ public class CompanyController {
 	}
 	
 	@GetMapping("companies/id/{id}")
-	public ResponseEntity<Optional<CompanyDto>> findCompanyById(@PathVariable("id") Long id){
-		Optional<CompanyDto> companyDto = companyService.findCompanyById(id);
+	public ResponseEntity<CompanyDto> findCompanyById(@PathVariable("id") Long id){
+		CompanyDto companyDto = companyService.findCompanyById(id);
 //		System.out.println(companyDto.get());
 //		return companyDto;
 		return ResponseEntity.status(HttpStatus.FOUND).body(companyDto);

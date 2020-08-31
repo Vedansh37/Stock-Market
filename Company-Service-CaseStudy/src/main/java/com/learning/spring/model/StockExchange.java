@@ -28,6 +28,14 @@ public class StockExchange {
 	private String address;
 	
 	private String remarks;
+
+	public StockExchange(String exhangeName, String brief, String address, String remarks) {
+		super();
+		this.exhangeName = exhangeName;
+		this.brief = brief;
+		this.address = address;
+		this.remarks = remarks;
+	}
 	
 	
 	
