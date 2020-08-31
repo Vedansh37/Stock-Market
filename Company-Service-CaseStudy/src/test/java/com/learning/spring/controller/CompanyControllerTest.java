@@ -36,6 +36,13 @@ public class CompanyControllerTest {
 	@Autowired
 	private WebApplicationContext wac;
 	
+	public CompanyControllerTest(MockMvc mockMvc, WebApplicationContext wac) {
+		super();
+		this.mockMvc = mockMvc;
+		this.wac = wac;
+	}
+
+
 	@Before
 	public void setup() {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
