@@ -32,7 +32,7 @@ public class CompanyController {
 	@GetMapping("companies/id/{id}")
 	public ResponseEntity<Optional<CompanyDto>> findCompanyById(@PathVariable("id") Long id){
 		Optional<CompanyDto> companyDto = companyService.findCompanyById(id);
-		System.out.println(companyDto.get());
+//		System.out.println(companyDto.get());
 //		return companyDto;
 		return ResponseEntity.status(HttpStatus.FOUND).body(companyDto);
 //		return new ResponseEntity<Optional<CompanyDto>>(companyService.findCompanyById(id),HttpStatus.FOUND);
@@ -46,7 +46,7 @@ public class CompanyController {
 	
 	@GetMapping("/companies")
 	public ResponseEntity<List<CompanyDto>> findAllCompany(){
-		return new ResponseEntity<List<CompanyDto>>(companyService.findAllCompany(),HttpStatus.FOUND);
+		return new ResponseEntity<List<CompanyDto>>(companyService.findAllCompany(),HttpStatus.OK);
 	}
 
 	@GetMapping("/companies/name/{name}")
