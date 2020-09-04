@@ -21,7 +21,7 @@ public class StockExchange {
 	@Column(name = "StockExchange_Id")
 	private Long stockExchangeId;
 	
-	private String exhangeName;
+	private String exchangeName;
 	
 	private String brief;
 	
@@ -31,7 +31,7 @@ public class StockExchange {
 
 	public StockExchange(String exhangeName, String brief, String address, String remarks) {
 		super();
-		this.exhangeName = exhangeName;
+		this.exchangeName = exhangeName;
 		this.brief = brief;
 		this.address = address;
 		this.remarks = remarks;
