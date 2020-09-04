@@ -11,7 +11,7 @@ public class StockExchangeDto {
 
 //	private Long stockExchangeId;
 	
-	private String exhangeName;
+	private String exchangeName;
 	
 	private String brief;
 	

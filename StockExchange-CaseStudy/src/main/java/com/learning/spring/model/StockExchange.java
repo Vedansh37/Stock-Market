@@ -21,7 +21,7 @@ public class StockExchange {
 	@Column(name = "StockExchange_Id")
 	private Long stockExchangeId;
 	
-	private String exhangeName;
+	private String exchangeName;
 	
 	private String brief;
 	

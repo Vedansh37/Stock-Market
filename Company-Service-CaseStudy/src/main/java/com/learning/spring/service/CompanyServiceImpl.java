@@ -40,7 +40,6 @@ public class CompanyServiceImpl implements CompanyService {
 	}
 
 	@Override
-
 	public CompanyDto findCompanyById(Long id) {
 //		Optional<Company> optionalCompany = companyRepository.findById(id);
 //		logger.info(optionalCompany.get().toString());
@@ -49,7 +48,6 @@ public class CompanyServiceImpl implements CompanyService {
 	}
 
 	@Override
-	
 	public CompanyDto addCompany(Company company) {
 		
 		List<StockExchange> stockExchanges = company.getStockExchanges();
@@ -97,7 +95,6 @@ public class CompanyServiceImpl implements CompanyService {
 	}
 
 	@Override
-	
 	public Optional<CompanyDto> getCompanyDetails(String companyName) {
 		Optional<Company> company = companyRepository.findCompanyByCompanyName(companyName);
 		Type optionalType = new TypeToken<Optional<CompanyDto>>() {}.getType();
@@ -105,7 +102,6 @@ public class CompanyServiceImpl implements CompanyService {
 	}
 
 	@Override
-
 	public List<Optional<IpoDetailsDto>> getCompanyIpoDetails(Long id) {
 		
 		Optional<Company> company = companyRepository.findById(id);
@@ -115,7 +111,6 @@ public class CompanyServiceImpl implements CompanyService {
 	}
 	
 	@Override
-	
 	public List<CompanyDto> findCompanyForStockExchangeById(Long id){
 		
 		List<Company> companies = companyRepository.findCompanyForStockExchangeById(id);
