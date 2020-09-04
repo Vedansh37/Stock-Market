@@ -12,12 +12,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedNativeQuery;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 
 @Entity
 @Data
@@ -28,10 +28,7 @@ import lombok.NoArgsConstructor;
 				  		+ "(SELECT COMPANY_COMPANY_ID FROM COMPANY_STOCK_EXCHANGES WHERE STOCK_EXCHANGES_STOCK_EXCHANGE_ID= ?)",
 				  resultClass = Company.class)
 
-@NamedNativeQuery(name="Company.findCompanyById",
-				query = "SELECT * FROM COMPANY WHERE COMPANY_ID = ?",resultClass = Company.class)
-public class Company {
-
+public class Company{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long companyId;
@@ -43,10 +40,9 @@ public class Company {
 	
 	private String ceo;
 	
-	@ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
 	@JoinColumn(name="Sector")
 	private Sector sector;
-//	private String sector;
 	
 //	@OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
 	private String[] boardOfDirectors = new String[2];
@@ -68,18 +64,6 @@ public class Company {
 				+ ceo + "]";
 	}
 
-
-	public Company(String companyName, int turnover, String ceo, Sector sector, String[] boardOfDirectors,
-			List<StockExchange> stockExchanges, List<IpoDetail> ipoDetails) {
-		super();
-		this.companyName = companyName;
-		this.turnover = turnover;
-		this.ceo = ceo;
-		this.sector = sector;
-		this.boardOfDirectors = boardOfDirectors;
-		this.stockExchanges = stockExchanges;
-		this.ipoDetails = ipoDetails;
-	}
 	
 	
 }

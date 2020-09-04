@@ -12,9 +12,6 @@ import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 
-import com.learning.spring.model.Company;
-import com.learning.spring.model.Sector;
-import com.learning.spring.model.StockExchange;
 import com.learning.spring.repo.CompanyRepository;
 
 @SpringBootApplication

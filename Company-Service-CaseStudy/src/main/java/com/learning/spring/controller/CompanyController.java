@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.learning.spring.dto.CompanyDto;
 import com.learning.spring.dto.IpoDetailsDto;
+import com.learning.spring.dto.StockPriceDto;
 import com.learning.spring.model.Company;
+import com.learning.spring.model.StockPrice;
 import com.learning.spring.service.CompanyService;
 
 
@@ -32,10 +34,7 @@ public class CompanyController {
 	@GetMapping("companies/id/{id}")
 	public ResponseEntity<CompanyDto> findCompanyById(@PathVariable("id") Long id){
 		CompanyDto companyDto = companyService.findCompanyById(id);
-//		System.out.println(companyDto.get());
-//		return companyDto;
 		return ResponseEntity.status(HttpStatus.FOUND).body(companyDto);
-//		return new ResponseEntity<Optional<CompanyDto>>(companyService.findCompanyById(id),HttpStatus.FOUND);
 	}
 	
 	@PostMapping("/companies/add")
@@ -64,4 +63,20 @@ public class CompanyController {
 	public ResponseEntity<List<CompanyDto>> findCompanyForStockExchangeById(@PathVariable("id") Long id){
 		return ResponseEntity.status(HttpStatus.FOUND).body(companyService.findCompanyForStockExchangeById(id));
 	}
+	
+	
+	@PostMapping("/stockprices/add")
+	public ResponseEntity<StockPriceDto> addStockPrice(@RequestBody StockPrice stockPrice){
+		
+		return ResponseEntity.status(HttpStatus.CREATED).body(companyService.addStockPrice(stockPrice));
+	}
+	
+	@GetMapping("/stockprices/{companyid}/{exchangeId}")
+	public ResponseEntity<List<StockPriceDto>> getAllStockPrices(@PathVariable("companyid") Long companyId,
+														@PathVariable("exchangeId") Long exchangeId){
+		
+		return ResponseEntity.status(HttpStatus.FOUND).
+							body(companyService.getAllStockPrices(companyId, exchangeId));
+	}
+	
 }

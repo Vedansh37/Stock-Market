@@ -24,12 +24,9 @@ import com.learning.spring.CompanyServiceCaseStudyApplication;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
-//@ExtendWith(MockitoExtension.class)
 @ContextConfiguration(classes=CompanyServiceCaseStudyApplication.class)
 @SpringBootTest
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-//@Transactional
-//@NoArgsConstructor
 public class CompanyControllerTest {
 	
 	
@@ -38,24 +35,16 @@ public class CompanyControllerTest {
 	@Autowired
 	private WebApplicationContext wac;
 	
-//	public CompanyControllerTest(MockMvc mockMvc, WebApplicationContext wac) {
-//		super();
-//		this.mockMvc = mockMvc;
-//		this.wac = wac;
-//	}
-//	
-	
 
 
 	@Before
 	public void setup() {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
-//		MockitoAnnotations.initMocks(this);
 	}
 	
 	
 	@Test
-	public void findAllCompany() throws Exception {
+	public void A_findAllCompany() throws Exception {
 		 mockMvc.perform(MockMvcRequestBuilders.get("/api/companies")
 				 .accept(MediaType.APPLICATION_JSON)).andDo(print())
 		 		 .andExpect(jsonPath("$", hasSize(0))).andReturn();
@@ -63,7 +52,7 @@ public class CompanyControllerTest {
 	
 	
 	@Test
-	public void saveCompany() throws Exception {
+	public void B_saveCompany() throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/companies/add")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content("{\r\n" + 
@@ -96,11 +85,17 @@ public class CompanyControllerTest {
 				.andExpect(jsonPath("$.companyName").exists())
 				.andExpect(jsonPath("$.companyName").value("SocGen"))
 				.andExpect(jsonPath("$.ceo").value("Frederic Oudea"))
-				.andReturn();
-			
-			
-		
+				.andReturn();	
 	}
+	
+	@Test
+	public void C_findAllCompanyAfterPersisit() throws Exception {
+		 mockMvc.perform(MockMvcRequestBuilders.get("/api/companies")
+				 .accept(MediaType.APPLICATION_JSON)).andDo(print())
+		 		 .andExpect(jsonPath("$", hasSize(1))).andReturn();
+	}
+	
+	
 	
 	
 	

@@ -5,7 +5,9 @@ import java.util.Optional;
 
 import com.learning.spring.dto.CompanyDto;
 import com.learning.spring.dto.IpoDetailsDto;
+import com.learning.spring.dto.StockPriceDto;
 import com.learning.spring.model.Company;
+import com.learning.spring.model.StockPrice;
 
 public interface CompanyService {
 
@@ -26,4 +28,10 @@ public interface CompanyService {
 	public List<Optional<IpoDetailsDto>> getCompanyIpoDetails(Long id);
 
 	List<CompanyDto> findCompanyForStockExchangeById(Long id);
+	
+	
+	public StockPriceDto addStockPrice(StockPrice stockPrice);
+	
+	public List<StockPriceDto> getAllStockPrices(Long companyId,Long exchangeId);
+	
 }

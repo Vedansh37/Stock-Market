@@ -13,21 +13,24 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.learning.spring.dto.CompanyDto;
 import com.learning.spring.dto.IpoDetailsDto;
+import com.learning.spring.dto.StockPriceDto;
 import com.learning.spring.intercomm.StockExchangeClient;
 import com.learning.spring.model.Company;
 import com.learning.spring.model.IpoDetail;
 import com.learning.spring.model.StockExchange;
+import com.learning.spring.model.StockPrice;
 import com.learning.spring.repo.CompanyRepository;
+import com.learning.spring.repo.StockPriceRepository;
 
 @Service
 @Transactional
 public class CompanyServiceImpl implements CompanyService {
 
 	CompanyRepository companyRepository;
-
-	
+	StockPriceRepository stockPriceRepository;
 	@Autowired
 	StockExchangeClient stockExchangeClient;
+	
 	
 	@Autowired
 	Logger logger;
@@ -35,46 +38,38 @@ public class CompanyServiceImpl implements CompanyService {
 	@Autowired
 	ModelMapper mapper;
 	
-	public CompanyServiceImpl(CompanyRepository companyRepository) {
-		this.companyRepository = companyRepository;
-	}
+	
 
+	public CompanyServiceImpl(CompanyRepository companyRepository, StockPriceRepository stockPriceRepository) {
+		this.companyRepository = companyRepository;
+		this.stockPriceRepository = stockPriceRepository;
+	}
+	
+	
+	
 	@Override
 	public CompanyDto findCompanyById(Long id) {
-//		Optional<Company> optionalCompany = companyRepository.findById(id);
+		Optional<Company> optionalCompany = companyRepository.findById(id);
+		
+		if(!optionalCompany.isPresent()) {
+			return null;
+		}
 //		logger.info(optionalCompany.get().toString());
-		Company company = companyRepository.findCompanyById(id);
-		return mapper.map(company,CompanyDto.class);
+//		Company company = companyRepository.findCompanyById(id);
+		return mapper.map(optionalCompany.get(),CompanyDto.class);
 	}
+
 
 	@Override
 	public CompanyDto addCompany(Company company) {
 		
 		List<StockExchange> stockExchanges = company.getStockExchanges();
-		
-//		 List<StockExchange> stockExchangesListed = new ArrayList<>();
-		 
-//		 for(StockExchange stockExchange : stockExchanges) {
-//			 String exhangeName = stockExchange.getExchangeName();
-//			 if(stockExchangeClient.findStockExchangeByExchangeName(exhangeName)!=null) { 
-//				 stockExchanges.remove(stockExchange);
-//				 logger.info(stockExchange.toString());
-//				 logger.info(stockExchanges.toString());
-//				 stockExchangesListed.add(stockExchange); 
-//			 } 
-//		 
-		 
-		 companyRepository.save(company);
-		
+		companyRepository.save(company);
 //		Communicating with Feign Client Stock Exchange for data integrity
 		for(StockExchange stockExchange: stockExchanges) {
 			stockExchangeClient.addStockExchange(stockExchange);
 		}
 		
-//		  for(StockExchange stockExchange: stockExchangesListed) {
-//			  company.getStockExchanges() .add(stockExchange); 
-//		 }
-		 
 		return mapper.map(company, CompanyDto.class);
 	}
 
@@ -119,6 +114,22 @@ public class CompanyServiceImpl implements CompanyService {
 //		Logging to check the output
 		logger.info(companiesDto.toString());
 		return companiesDto;
+	}
+
+	@Override
+	public StockPriceDto addStockPrice(StockPrice stockPrice) {
+		
+		stockPriceRepository.save(stockPrice);
+		
+		return mapper.map(stockPrice, StockPriceDto.class);
+	}
+
+	@Override
+	public List<StockPriceDto> getAllStockPrices(Long companyId, Long exchangeId) {
+		List<StockPrice> allStockPrices = stockPriceRepository.getAllStockPrices(companyId,exchangeId);
+		Type listType = new TypeToken<List<StockPriceDto>>() {}.getType();
+		
+		return mapper.map(allStockPrices, listType);
 	}
 
 }
