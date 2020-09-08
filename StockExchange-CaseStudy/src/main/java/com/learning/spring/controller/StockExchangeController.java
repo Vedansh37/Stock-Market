@@ -33,11 +33,8 @@ public class StockExchangeController {
 	@GetMapping("/stockexchanges/name/{name}")
 	public ResponseEntity<Optional<StockExchangeDto>> findStockExchangeByName(@PathVariable("name")String name){
 		
-		Optional<StockExchangeDto> stockExchange = stockExchangeService.findStockExchangeByExchangeName(name);
-		if(stockExchange==null) {
-			return null;
-		}
-		return ResponseEntity.status(HttpStatus.FOUND).body(stockExchange);
+		return ResponseEntity.status(HttpStatus.FOUND).body(stockExchangeService.findStockExchangeByExchangeName(name));
+		
 	}
 	@GetMapping("/stockexchanges")
 	public ResponseEntity<List<StockExchangeDto>> findAllStockExchanges(){
