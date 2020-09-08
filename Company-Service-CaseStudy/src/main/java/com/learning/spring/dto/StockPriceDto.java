@@ -16,8 +16,8 @@ import lombok.NoArgsConstructor;
 public class StockPriceDto {
 	
 	private Long stockId;
+	private float price;
 	private Company company;
 	private StockExchange stockExchange;
-	private float price;
 	private Date date;
 }

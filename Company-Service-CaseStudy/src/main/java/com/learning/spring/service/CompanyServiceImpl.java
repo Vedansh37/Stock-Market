@@ -3,6 +3,7 @@ package com.learning.spring.service;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -17,9 +18,12 @@ import com.learning.spring.dto.StockPriceDto;
 import com.learning.spring.intercomm.StockExchangeClient;
 import com.learning.spring.model.Company;
 import com.learning.spring.model.IpoDetail;
+import com.learning.spring.model.Sector;
 import com.learning.spring.model.StockExchange;
 import com.learning.spring.model.StockPrice;
 import com.learning.spring.repo.CompanyRepository;
+import com.learning.spring.repo.SectorRepository;
+import com.learning.spring.repo.StockExchangeRepository;
 import com.learning.spring.repo.StockPriceRepository;
 
 @Service
@@ -28,9 +32,13 @@ public class CompanyServiceImpl implements CompanyService {
 
 	CompanyRepository companyRepository;
 	StockPriceRepository stockPriceRepository;
+	StockExchangeRepository stockExchangeRepository;
+	
+	@Autowired
+	SectorRepository sectorRepository;
+	
 	@Autowired
 	StockExchangeClient stockExchangeClient;
-	
 	
 	@Autowired
 	Logger logger;
@@ -38,15 +46,15 @@ public class CompanyServiceImpl implements CompanyService {
 	@Autowired
 	ModelMapper mapper;
 	
-	
-
-	public CompanyServiceImpl(CompanyRepository companyRepository, StockPriceRepository stockPriceRepository) {
+	public CompanyServiceImpl(CompanyRepository companyRepository, StockPriceRepository stockPriceRepository,
+			StockExchangeRepository stockExchangeRepository) {
+		super();
 		this.companyRepository = companyRepository;
 		this.stockPriceRepository = stockPriceRepository;
+		this.stockExchangeRepository = stockExchangeRepository;
 	}
-	
-	
-	
+
+
 	@Override
 	public CompanyDto findCompanyById(Long id) {
 		Optional<Company> optionalCompany = companyRepository.findById(id);
@@ -54,8 +62,7 @@ public class CompanyServiceImpl implements CompanyService {
 		if(!optionalCompany.isPresent()) {
 			return null;
 		}
-//		logger.info(optionalCompany.get().toString());
-//		Company company = companyRepository.findCompanyById(id);
+
 		return mapper.map(optionalCompany.get(),CompanyDto.class);
 	}
 
@@ -63,13 +70,28 @@ public class CompanyServiceImpl implements CompanyService {
 	@Override
 	public CompanyDto addCompany(Company company) {
 		
-		List<StockExchange> stockExchanges = company.getStockExchanges();
-		companyRepository.save(company);
-//		Communicating with Feign Client Stock Exchange for data integrity
+		Set<StockExchange> stockExchanges = company.getStockExchanges();
+		
 		for(StockExchange stockExchange: stockExchanges) {
-			stockExchangeClient.addStockExchange(stockExchange);
+//			StockExchanges if already exists won't be persisted 
+			
+			Optional<StockExchange> optionalExchange = stockExchangeRepository.
+					findByExchangeName(stockExchange.getExchangeName());
+			if(optionalExchange.isPresent()){
+				company.getStockExchanges().remove(stockExchange);
+				company.getStockExchanges().add(optionalExchange.get());
+			}
+			else {
+//				Communicating with Feign Client Stock Exchange for data integrity
+				stockExchangeClient.addStockExchange(stockExchange);
+			}
 		}
 		
+		Optional<Sector> sector = sectorRepository.findBySectorName(company.getSector().getSectorName());
+		if(sector.isPresent()) {
+			company.setSector(sector.get());
+		}
+		companyRepository.save(company);
 		return mapper.map(company, CompanyDto.class);
 	}
 
@@ -106,9 +128,11 @@ public class CompanyServiceImpl implements CompanyService {
 	}
 	
 	@Override
-	public List<CompanyDto> findCompanyForStockExchangeById(Long id){
+	public List<CompanyDto> findCompanyForStockExchangeById(String exchangeName){
 		
-		List<Company> companies = companyRepository.findCompanyForStockExchangeById(id);
+		Optional<StockExchange> exchange = stockExchangeRepository.findByExchangeName(exchangeName);
+		List<Company> companies = companyRepository.
+							findCompanyForStockExchangeById(exchange.get().getStockExchangeId());
 		Type listType = new TypeToken<List<CompanyDto>>() {}.getType();
 		List<CompanyDto> companiesDto=mapper.map(companies, listType);
 //		Logging to check the output
@@ -118,6 +142,14 @@ public class CompanyServiceImpl implements CompanyService {
 
 	@Override
 	public StockPriceDto addStockPrice(StockPrice stockPrice) {
+		Company company = stockPrice.getCompany();
+		StockExchange stockExchange = stockPrice.getStockExchange();
+		Optional<Company> optionalCompany= companyRepository.findCompanyByCompanyName(company.getCompanyName());
+//		Setting the company to the one already in the repository
+		stockPrice.setCompany(optionalCompany.get());
+		Optional<StockExchange> optionalExchange = stockExchangeRepository.findByExchangeName(stockExchange.getExchangeName());
+//		Setting the Stock Exchange to the one already in the repository
+		stockPrice.setStockExchange(optionalExchange.get());
 		
 		stockPriceRepository.save(stockPrice);
 		
@@ -125,8 +157,9 @@ public class CompanyServiceImpl implements CompanyService {
 	}
 
 	@Override
-	public List<StockPriceDto> getAllStockPrices(Long companyId, Long exchangeId) {
-		List<StockPrice> allStockPrices = stockPriceRepository.getAllStockPrices(companyId,exchangeId);
+	public List<StockPriceDto> getAllStockPricesByCompany(String companyName, String exchangeName) {
+		List<StockPrice> allStockPrices = stockPriceRepository
+										.getAllStockPricesByCompany(companyName,exchangeName);
 		Type listType = new TypeToken<List<StockPriceDto>>() {}.getType();
 		
 		return mapper.map(allStockPrices, listType);

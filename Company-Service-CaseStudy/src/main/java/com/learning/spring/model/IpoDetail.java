@@ -27,7 +27,7 @@ import lombok.NoArgsConstructor;
 public class IpoDetail {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long ipoId;
 	
 //	@Column(name = "Company_Name")
@@ -36,7 +36,7 @@ public class IpoDetail {
 //	
 	
 //	@Column(name="StockExchange")
-	@ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.PERSIST)
 	@JoinColumn(name="stockExchange")
 	private StockExchange stockExchange;
 	

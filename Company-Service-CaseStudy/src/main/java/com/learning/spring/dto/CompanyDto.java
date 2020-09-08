@@ -3,8 +3,6 @@ package com.learning.spring.dto;
 import java.util.List;
 
 import com.learning.spring.model.Sector;
-//import com.learning.spring.model.IpoDetail;
-//import com.learning.spring.model.Sector;
 import com.learning.spring.model.StockExchange;
 
 import lombok.AllArgsConstructor;
@@ -16,7 +14,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CompanyDto {
 	
-	private Long companyId;
+//	private Long companyId;
 
 	private String companyName;
 
@@ -24,7 +22,7 @@ public class CompanyDto {
 
 	private Sector sector;
 	
-	private List<String> boardOfDirectors;
+//	private List<String> boardOfDirectors;
 	
 	private List<StockExchange> stockExchanges;
 	

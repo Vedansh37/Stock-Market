@@ -14,6 +14,5 @@ public interface CompanyRepository extends JpaRepository<Company, Long>{
 	public Optional<Company> findCompanyByCompanyName(String companyName);
 	
 	public List<Company> findCompanyForStockExchangeById(Long id);
-	
-	
+	 
 }

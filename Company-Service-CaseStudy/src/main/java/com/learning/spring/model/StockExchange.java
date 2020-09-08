@@ -6,14 +6,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class StockExchange {
 	
 	@Id
@@ -21,6 +19,7 @@ public class StockExchange {
 	@Column(name = "StockExchange_Id")
 	private Long stockExchangeId;
 	
+	@Column(unique = true)
 	private String exchangeName;
 	
 	private String brief;
@@ -28,7 +27,7 @@ public class StockExchange {
 	private String address;
 	
 	private String remarks;
-
+	
 	public StockExchange(String exhangeName, String brief, String address, String remarks) {
 		super();
 		this.exchangeName = exhangeName;
@@ -36,8 +35,6 @@ public class StockExchange {
 		this.address = address;
 		this.remarks = remarks;
 	}
-	
-	
 	
 	
 }

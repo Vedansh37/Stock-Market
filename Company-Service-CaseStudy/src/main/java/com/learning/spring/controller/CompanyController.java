@@ -59,9 +59,9 @@ public class CompanyController {
 		return ResponseEntity.status(HttpStatus.FOUND).body(companyService.getCompanyIpoDetails(companyId));
 	}
 	
-	@GetMapping("/companies/stockexchange/{id}")
-	public ResponseEntity<List<CompanyDto>> findCompanyForStockExchangeById(@PathVariable("id") Long id){
-		return ResponseEntity.status(HttpStatus.FOUND).body(companyService.findCompanyForStockExchangeById(id));
+	@GetMapping("/companies/stockexchange/{exchangeName}")
+	public ResponseEntity<List<CompanyDto>> findCompanyForStockExchangeById(@PathVariable("exchangeName") String name){
+		return ResponseEntity.status(HttpStatus.FOUND).body(companyService.findCompanyForStockExchangeById(name));
 	}
 	
 	
@@ -71,12 +71,12 @@ public class CompanyController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(companyService.addStockPrice(stockPrice));
 	}
 	
-	@GetMapping("/stockprices/{companyid}/{exchangeId}")
-	public ResponseEntity<List<StockPriceDto>> getAllStockPrices(@PathVariable("companyid") Long companyId,
-														@PathVariable("exchangeId") Long exchangeId){
+	@GetMapping("/stockprices/{companyName}/{exchangeName}")
+	public ResponseEntity<List<StockPriceDto>> getAllStockPrices(@PathVariable("companyName") String companyName,
+														@PathVariable("exchangeId") String exchangeName){
 		
 		return ResponseEntity.status(HttpStatus.FOUND).
-							body(companyService.getAllStockPrices(companyId, exchangeId));
+							body(companyService.getAllStockPricesByCompany(companyName, exchangeName));
 	}
 	
 }

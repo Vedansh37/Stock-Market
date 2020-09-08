@@ -27,11 +27,11 @@ public interface CompanyService {
 	
 	public List<Optional<IpoDetailsDto>> getCompanyIpoDetails(Long id);
 
-	List<CompanyDto> findCompanyForStockExchangeById(Long id);
+	List<CompanyDto> findCompanyForStockExchangeById(String exchangeName);
 	
 	
 	public StockPriceDto addStockPrice(StockPrice stockPrice);
 	
-	public List<StockPriceDto> getAllStockPrices(Long companyId,Long exchangeId);
+	public List<StockPriceDto> getAllStockPricesByCompany(String companyName,String exchangeName);
 	
 }

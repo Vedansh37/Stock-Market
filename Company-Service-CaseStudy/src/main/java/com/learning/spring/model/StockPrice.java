@@ -20,8 +20,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@NamedNativeQuery(name="StockPrice.getAllStockPrices",
-					query = "SELECT * FROM STOCK_PRICE WHERE COMPANY_ID = ? AND STOCK_EXCHANGE = ?",
+@NamedNativeQuery(name="StockPrice.getAllStockPricesByCompany",
+					query = "SELECT * FROM STOCK_PRICE WHERE COMPANY_ID in (SELECT COMPANY_ID FROM COMPANY"
+							+ "WHERE COMPANY_NAME = ?) AND STOCK_EXCHANGE IN (SELECT EXCHANGE_ID FROM "
+							+ "STOCK_EXCHANGE WHERE EXCHANGE_NAME = ?)",
 					resultClass = StockPrice.class)
 @Table(name = "STOCK_PRICE")
 public class StockPrice {

@@ -10,5 +10,5 @@ import com.learning.spring.model.StockPrice;
 @Repository
 public interface StockPriceRepository extends JpaRepository<StockPrice, Long>{
 
-	public List<StockPrice> getAllStockPrices(Long companyId,Long exchangeId);
+	public List<StockPrice> getAllStockPricesByCompany(String companyName,String exchangeName);
 }

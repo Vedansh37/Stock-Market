@@ -1,6 +1,7 @@
-package com.learning.spring.model;
+	package com.learning.spring.model;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -9,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedNativeQuery;
@@ -25,9 +27,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NamedNativeQuery(name = "Company.findCompanyForStockExchangeById",
 				  query = "SELECT * FROM COMPANY WHERE COMPANY_ID IN "
-				  		+ "(SELECT COMPANY_COMPANY_ID FROM COMPANY_STOCK_EXCHANGES WHERE STOCK_EXCHANGES_STOCK_EXCHANGE_ID= ?)",
+				  		+ "(SELECT COMPANY_ID FROM COMPANY_STOCKEXCHANGES WHERE STOCK_EXCHANGE_ID= ?)",
 				  resultClass = Company.class)
-
 public class Company{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,7 +41,7 @@ public class Company{
 	
 	private String ceo;
 	
-	@ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.PERSIST)
 	@JoinColumn(name="Sector")
 	private Sector sector;
 	
@@ -48,12 +49,14 @@ public class Company{
 	private String[] boardOfDirectors = new String[2];
 	
 	
-	@ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-	@JoinColumn(name = "companyId")
-	private List<StockExchange> stockExchanges;
+	@ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.PERSIST)
+	@JoinTable(name = "Company_Stockexchanges",
+				joinColumns = {@JoinColumn(name="Company_Id")},
+				inverseJoinColumns = {@JoinColumn(name="StockExchange_Id")})
+	private Set<StockExchange> stockExchanges;
 	
 	
-	@OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL,mappedBy = "companyName")
+	@OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
 //	@JoinColumn(name="companyName")
 	private List<IpoDetail> ipoDetails;
 
