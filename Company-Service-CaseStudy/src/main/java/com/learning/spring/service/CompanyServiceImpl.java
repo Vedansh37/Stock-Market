@@ -165,4 +165,14 @@ public class CompanyServiceImpl implements CompanyService {
 		return mapper.map(allStockPrices, listType);
 	}
 
+
+	@Override
+	public List<StockPriceDto> getAllStockPriceFromToDate(String companyName, String exchangeName, String fromDate,
+			String toDate) {
+		List<StockPrice> stockPrices = stockPriceRepository.getStockPriceFromToDate(companyName, exchangeName, fromDate, toDate);
+		Type listType = new TypeToken<List<StockPriceDto>>() {}.getType();
+		
+		return mapper.map(stockPrices, listType);
+	}
+
 }

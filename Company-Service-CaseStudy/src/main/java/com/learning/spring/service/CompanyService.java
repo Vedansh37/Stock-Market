@@ -34,4 +34,7 @@ public interface CompanyService {
 	
 	public List<StockPriceDto> getAllStockPricesByCompany(String companyName,String exchangeName);
 	
+	public List<StockPriceDto> getAllStockPriceFromToDate(String companyName,String exchangeName,
+															String fromDate,String toDate);
+	
 }

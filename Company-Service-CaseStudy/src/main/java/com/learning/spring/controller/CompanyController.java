@@ -71,12 +71,19 @@ public class CompanyController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(companyService.addStockPrice(stockPrice));
 	}
 	
-	@GetMapping("/stockprices/{companyName}/{exchangeName}")
+	@GetMapping("/stockprices/all/{companyName}/{exchangeName}")
 	public ResponseEntity<List<StockPriceDto>> getAllStockPrices(@PathVariable("companyName") String companyName,
-														@PathVariable("exchangeId") String exchangeName){
+														@PathVariable("exchangeName") String exchangeName){
 		
 		return ResponseEntity.status(HttpStatus.FOUND).
 							body(companyService.getAllStockPricesByCompany(companyName, exchangeName));
+	}
+	
+	@GetMapping("stockprices/{companyName}/{exchangeName}/from/{fromDate}/to/{toDate}")
+	public ResponseEntity<List<StockPriceDto>> getAllStockPricesFromToDate(@PathVariable("companyName") String companyName,
+	@PathVariable("exchangeName") String exchangeName,@PathVariable("fromDate")String fromDate,@PathVariable("toDate")String toDate){
+		
+		return ResponseEntity.status(HttpStatus.FOUND).body(companyService.getAllStockPriceFromToDate(companyName, exchangeName, fromDate, toDate));
 	}
 	
 }

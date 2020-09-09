@@ -16,8 +16,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.RequestBuilder;
-import org.springframework.test.web.servlet.ResultHandler;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -157,8 +155,83 @@ public class CompanyControllerTest {
 					.andReturn();
 	}
 	
+	@Test
+	public void G_postStockPrice() throws Exception {
+		mockMvc.perform(MockMvcRequestBuilders.post("/api/stockprices/add")
+				.contentType(MediaType.APPLICATION_JSON).content("{\r\n" + 
+						"    \"price\":100,\r\n" + 
+						"    \"company\":{\r\n" + 
+						"        \"companyName\":\"SocGen\"\r\n" + 
+						"        },\r\n" + 
+						"    \"date\":\"2020-08-01\",\r\n" + 
+						"    \"stockExchange\":{\r\n" + 
+						"        \"exchangeName\":\"NSE\"\r\n" + 
+						"    }\r\n" + 
+						"}").accept(MediaType.APPLICATION_JSON))
+						.andDo(MockMvcResultHandlers.print())
+						.andExpect(jsonPath("$.stockId").exists())
+						.andExpect(jsonPath("$.company.companyName", is("SocGen")))
+						.andExpect(jsonPath("$.stockExchange.exchangeName", is("NSE")))
+						.andReturn();
+	}
 	
 	
+	@Test
+	public void H_post2StockPrice() throws Exception{
+		mockMvc.perform(MockMvcRequestBuilders.post("/api/stockprices/add")
+				.contentType(MediaType.APPLICATION_JSON).content("{\r\n" + 
+						"    \"price\":95.9,\r\n" + 
+						"    \"company\":{\r\n" + 
+						"        \"companyName\":\"SocGen\"\r\n" + 
+						"        },\r\n" + 
+						"    \"date\":\"2020-07-21\",\r\n" + 
+						"    \"stockExchange\":{\r\n" + 
+						"        \"exchangeName\":\"NSE\"\r\n" + 
+						"    }\r\n" + 
+						"}").accept(MediaType.APPLICATION_JSON))
+						.andDo(MockMvcResultHandlers.print())
+						.andExpect(jsonPath("$.stockId").exists())
+						.andExpect(jsonPath("$.company.companyName", is("SocGen")))
+						.andExpect(jsonPath("$.stockExchange.exchangeName", is("NSE")))
+						.andReturn();
+		
+		mockMvc.perform(MockMvcRequestBuilders.post("/api/stockprices/add")
+				.contentType(MediaType.APPLICATION_JSON).content("{\r\n" + 
+						"    \"price\":94.2,\r\n" + 
+						"    \"company\":{\r\n" + 
+						"        \"companyName\":\"SocGen\"\r\n" + 
+						"        },\r\n" + 
+						"    \"date\":\"2020-05-24\",\r\n" + 
+						"    \"stockExchange\":{\r\n" + 
+						"        \"exchangeName\":\"NSE\"\r\n" + 
+						"    }\r\n" + 
+						"}").accept(MediaType.APPLICATION_JSON))
+						.andDo(MockMvcResultHandlers.print())
+						.andExpect(jsonPath("$.stockId").exists())
+						.andExpect(jsonPath("$.company.companyName", is("SocGen")))
+						.andExpect(jsonPath("$.stockExchange.exchangeName", is("NSE")))
+						.andReturn();
+		
+		
+		
+	}
+	
+	@Test
+	public void I_getAllStockPricesFromCompanyandExchange() throws Exception {
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/stockprices/all/SocGen/NSE")
+				.accept(MediaType.APPLICATION_JSON)).andDo(MockMvcResultHandlers.print())
+				.andExpect(jsonPath("$",hasSize(4)))
+				.andReturn();
+	}
+	
+	@Test 
+	public void J_getAllStockPricesFromCompanyFromAndToDate() throws Exception{
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/stockprices/SocGen/NSE/from/2020-05-23/to/2020-07-22")
+						.accept(MediaType.APPLICATION_JSON))
+						.andDo(MockMvcResultHandlers.print())
+						.andExpect(jsonPath("$", hasSize(2)))
+						.andReturn();
+	}
 	
 	
 }
