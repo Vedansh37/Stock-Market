@@ -29,6 +29,7 @@ public interface CompanyService {
 
 	List<CompanyDto> findCompanyForStockExchangeById(String exchangeName);
 	
+	List<CompanyDto> findCompanyFromSector(String sectorName);
 	
 	public StockPriceDto addStockPrice(StockPrice stockPrice);
 	

@@ -89,14 +89,7 @@ public class CompanyControllerTest {
 	}
 	
 	@Test
-	public void C_findAllCompanyAfterPersisit() throws Exception {
-		 mockMvc.perform(MockMvcRequestBuilders.get("/api/companies")
-				 .accept(MediaType.APPLICATION_JSON)).andDo(print())
-		 		 .andExpect(jsonPath("$", hasSize(1))).andReturn();
-	}
-	
-	@Test
-	public void D_addSecondCompany() throws Exception{
+	public void C_addSecondCompany() throws Exception{
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/companies/add")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content("{\r\n" + 
@@ -124,7 +117,7 @@ public class CompanyControllerTest {
 	}
 	
 	@Test
-	public void E_getCompaniesFromExchange() throws Exception{
+	public void D_getCompaniesFromExchange() throws Exception{
 		
 		mockMvc.perform(MockMvcRequestBuilders.get("/api/companies/stockexchange/NSE")
 				.accept(MediaType.APPLICATION_JSON)).andDo(MockMvcResultHandlers.print())
@@ -136,7 +129,7 @@ public class CompanyControllerTest {
 	}
 	
 	@Test
-	public void F_postStockPrice() throws Exception{
+	public void E_postStockPrices() throws Exception{
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/stockprices/add")
 					.contentType(MediaType.APPLICATION_JSON)
 					.content("{\r\n" + 
@@ -153,10 +146,7 @@ public class CompanyControllerTest {
 					.andExpect(jsonPath("$.stockId").exists())
 					.andExpect(jsonPath("$.company.companyName", is("SocGen")))
 					.andReturn();
-	}
-	
-	@Test
-	public void G_postStockPrice() throws Exception {
+		
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/stockprices/add")
 				.contentType(MediaType.APPLICATION_JSON).content("{\r\n" + 
 						"    \"price\":100,\r\n" + 
@@ -173,11 +163,8 @@ public class CompanyControllerTest {
 						.andExpect(jsonPath("$.company.companyName", is("SocGen")))
 						.andExpect(jsonPath("$.stockExchange.exchangeName", is("NSE")))
 						.andReturn();
-	}
-	
-	
-	@Test
-	public void H_post2StockPrice() throws Exception{
+		
+		
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/stockprices/add")
 				.contentType(MediaType.APPLICATION_JSON).content("{\r\n" + 
 						"    \"price\":95.9,\r\n" + 
@@ -195,6 +182,8 @@ public class CompanyControllerTest {
 						.andExpect(jsonPath("$.stockExchange.exchangeName", is("NSE")))
 						.andReturn();
 		
+		
+		
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/stockprices/add")
 				.contentType(MediaType.APPLICATION_JSON).content("{\r\n" + 
 						"    \"price\":94.2,\r\n" + 
@@ -211,13 +200,10 @@ public class CompanyControllerTest {
 						.andExpect(jsonPath("$.company.companyName", is("SocGen")))
 						.andExpect(jsonPath("$.stockExchange.exchangeName", is("NSE")))
 						.andReturn();
-		
-		
-		
 	}
 	
 	@Test
-	public void I_getAllStockPricesFromCompanyandExchange() throws Exception {
+	public void F_getAllStockPricesFromCompanyandExchange() throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.get("/api/stockprices/all/SocGen/NSE")
 				.accept(MediaType.APPLICATION_JSON)).andDo(MockMvcResultHandlers.print())
 				.andExpect(jsonPath("$",hasSize(4)))
@@ -225,12 +211,23 @@ public class CompanyControllerTest {
 	}
 	
 	@Test 
-	public void J_getAllStockPricesFromCompanyFromAndToDate() throws Exception{
+	public void G_getAllStockPricesFromCompanyFromAndToDate() throws Exception{
 		mockMvc.perform(MockMvcRequestBuilders.get("/api/stockprices/SocGen/NSE/from/2020-05-23/to/2020-07-22")
 						.accept(MediaType.APPLICATION_JSON))
 						.andDo(MockMvcResultHandlers.print())
 						.andExpect(jsonPath("$", hasSize(2)))
 						.andReturn();
+	}
+	
+	@Test
+	public void H_getCompaniesFromSector() throws Exception{
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/companies/sector/IT")
+				.accept(MediaType.APPLICATION_JSON))
+				.andDo(MockMvcResultHandlers.print())
+				.andExpect(jsonPath("$", hasSize(2)))
+				.andExpect(jsonPath("$[0].companyName", is("SocGen")))
+				.andExpect(jsonPath("$[1].companyName", is("Jio")))
+				.andReturn();
 	}
 	
 	

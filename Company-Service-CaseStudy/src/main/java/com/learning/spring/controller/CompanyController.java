@@ -64,7 +64,10 @@ public class CompanyController {
 		return ResponseEntity.status(HttpStatus.FOUND).body(companyService.findCompanyForStockExchangeById(name));
 	}
 	
-	
+	@GetMapping("/companies/sector/{sectorName}")
+	public ResponseEntity<List<CompanyDto>> getCompanyFromSector(@PathVariable("sectorName")String sectorName){
+		return ResponseEntity.status(HttpStatus.FOUND).body(companyService.findCompanyFromSector(sectorName));
+	}
 	@PostMapping("/stockprices/add")
 	public ResponseEntity<StockPriceDto> addStockPrice(@RequestBody StockPrice stockPrice){
 		

@@ -175,4 +175,13 @@ public class CompanyServiceImpl implements CompanyService {
 		return mapper.map(stockPrices, listType);
 	}
 
+
+	@Override
+	public List<CompanyDto> findCompanyFromSector(String sectorName) {
+		List<Company> companyFromSector = companyRepository.getCompanyFromSector(sectorName);
+		Type listType = new TypeToken<List<CompanyDto>>() {}.getType();
+		
+		return mapper.map(companyFromSector, listType);
+	}
+
 }
